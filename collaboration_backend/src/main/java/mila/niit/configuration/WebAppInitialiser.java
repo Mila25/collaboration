@@ -1,5 +1,24 @@
 package mila.niit.configuration;
 
-public class WebAppInitialiser {
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+//web.xml file in project 1
+public class WebAppInitialiser extends AbstractAnnotationConfigDispatcherServletInitializer{
+ public  WebAppInitialiser() {
+    System.out.println("WEBAPPINITIALISER is Instantiated");
+}
+	@Override
+	protected Class<?>[] getRootConfigClasses() {
+		return new Class[]{DBConfiguration.class};
+	}
+
+	@Override
+	protected Class<?>[] getServletConfigClasses() {
+		return new Class[]{WebConfig.class};
+	}
+
+	@Override
+	protected String[] getServletMappings() {
+		return new String[]{"/"};
+	}
 
 }

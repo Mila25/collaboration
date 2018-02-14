@@ -1,6 +1,3 @@
-/**
- * UserController
- */
 app.controller('UserController',function($scope,UserService,$location){
 	$scope.register=function(){
 		UserService.register($scope.user).then(

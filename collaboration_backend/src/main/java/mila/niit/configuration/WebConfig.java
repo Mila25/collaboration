@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 //dispatcher-servlet.xml in project 1
 @Configuration
 @EnableWebMvc   //<mvc:annotation-driven>
-@ComponentScan(basePackages="com.niit")
+@ComponentScan(basePackages="mila.niit")
 public class WebConfig extends WebMvcConfigurerAdapter{
 public WebConfig(){
 	System.out.println("WEBCONFIG class is instantiated");
