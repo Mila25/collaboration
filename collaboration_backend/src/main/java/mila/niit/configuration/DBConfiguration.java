@@ -1,13 +1,5 @@
 package mila.niit.configuration;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-	
-import mila.niit.model.User;
-
-import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-
 
 import java.util.Properties;
 
@@ -21,9 +13,17 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import mila.niit.model.Job;
+import mila.niit.model.User;
+
+
+
+
+
 @Configuration
 @EnableTransactionManagement
 public class DBConfiguration {
+	
 	public DBConfiguration(){
 		System.out.println("DBCOnfiguration class instantiated");
 	}
@@ -37,7 +37,7 @@ public class DBConfiguration {
 		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
 		hibernateProperties.setProperty("hibernate.show_sql", "true");
 		lsf.addProperties(hibernateProperties);
-		Class classes[]=new Class[]{User.class};
+		Class classes[]=new Class[]{User.class,Job.class};
 	    return lsf.addAnnotatedClasses(classes).buildSessionFactory();
 	}
 	@Bean
@@ -56,4 +56,3 @@ public class DBConfiguration {
 	}
 
 }
-

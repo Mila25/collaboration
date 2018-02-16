@@ -1,0 +1,21 @@
+<div id="login-box">
+<div  class="error" ng-show="error.message"> <!--  invalid credentials -->
+<span >{{error.message}}</span>
+</div>
+<div class="msg" ng-show="successMessage"><!--  loggedout successfully -->
+<span>{{successMessage}}</span>
+</div>
+<div class="error" ng-show="errorMessage"><!-- Please login -->
+<span>{{errorMessage}}</span>
+</div>
+<div >
+<form >
+<table>
+<tr><td>
+Enter email:</td><td> <input type="email" ng-model="user.email"></td></tr>
+<tr><td>Enter password:</td> <td><input type="password" ng-model="user.password"></td></tr>
+<tr><td colspan="2" align="center"><input type="submit" value="Login" ng-click="login()"></td>
+</table>
+</form>
+</div>
+</div>
