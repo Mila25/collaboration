@@ -1,5 +1,6 @@
 package mila.niit.controller;
 
+
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import mila.niit.dao.BlogPostDao;
 import mila.niit.dao.BlogPostLikesDao;
 import mila.niit.dao.UserDAO;
+import mila.niit.model.BlogComment;
 import mila.niit.model.BlogPost;
 import mila.niit.model.BlogPostLikes;
 import mila.niit.model.ErrorClass;
@@ -29,7 +31,7 @@ public class BlogPostController {
 	@Autowired
 	private BlogPostDao blogPostDao;
 	@Autowired
-	private UserDAO userDAO;
+	private UserDAO UserDAO;
 	@Autowired
 	private BlogPostLikesDao blogPostLikesDao;
 	
@@ -41,7 +43,7 @@ public class BlogPostController {
 					return new ResponseEntity<ErrorClass>(error,HttpStatus.UNAUTHORIZED);
 		}
 		blogPost.setPostedOn(new Date());
-		User postedBy=userDAO.getUser(email);
+		User postedBy=UserDAO.getUser(email);
 		blogPost.setPostedBy(postedBy);
 		try {
 			blogPostDao.addBlogPost(blogPost);
@@ -61,7 +63,7 @@ public class BlogPostController {
 			return new ResponseEntity<ErrorClass>(error,HttpStatus.UNAUTHORIZED);
 		}
 		if(!approved){
-			User user=userDAO.getUser(email);
+			User user=UserDAO.getUser(email);
 			if(!user.getRole().equals("ADMIN")){
 				ErrorClass error=new ErrorClass(4,"Access Denied..");
 				return new ResponseEntity<ErrorClass>(error,HttpStatus.UNAUTHORIZED);
@@ -79,7 +81,7 @@ public class BlogPostController {
 			ErrorClass error=new ErrorClass(4,"Unauthrozied access.. Please login");
 			return new ResponseEntity<ErrorClass>(error,HttpStatus.UNAUTHORIZED); //2nd callback function
 		}
-		User user=userDAO.getUser(email);
+		User user=UserDAO.getUser(email);
 		BlogPost blogPost=blogPostDao.getBlogById(id);
 		if(!blogPost.isApproved())
 			if(!user.getRole().equals("ADMIN")){
@@ -123,7 +125,7 @@ public class BlogPostController {
 			ErrorClass error=new ErrorClass(4,"Unauthrozied access.. Please login");
 			return new ResponseEntity<ErrorClass>(error,HttpStatus.UNAUTHORIZED);
 		}
-		User user=userDAO.getUser(email);
+		User user=UserDAO.getUser(email);
 		if(!user.getRole().equals("ADMIN")){
 			ErrorClass error=new ErrorClass(4,"Access Denied..");
 			return new ResponseEntity<ErrorClass>(error,HttpStatus.UNAUTHORIZED);
@@ -140,7 +142,7 @@ public class BlogPostController {
 			ErrorClass error=new ErrorClass(4,"Unauthrozied access.. Please login");
 			return new ResponseEntity<ErrorClass>(error,HttpStatus.UNAUTHORIZED);
 		}
-		User user=userDAO.getUser(email);
+		User user=UserDAO.getUser(email);
 		if(!user.getRole().equals("ADMIN")){
 			ErrorClass error=new ErrorClass(4,"Access Denied..");
 			return new ResponseEntity<ErrorClass>(error,HttpStatus.UNAUTHORIZED);
@@ -149,4 +151,41 @@ public class BlogPostController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	
+	
+	@RequestMapping(value="/addblogcomment",method=RequestMethod.POST)
+	
+	public ResponseEntity<?> addBlogComment(@RequestBody BlogComment blogComment,HttpSession session){
+		
+		String email=(String)session.getAttribute("loginId");
+		if(email==null) {
+			ErrorClass error=new ErrorClass(4,"Unauthrozied access.. Please login");
+			return new ResponseEntity<ErrorClass>(error,HttpStatus.UNAUTHORIZED);
+		}
+		try {
+			blogComment.setCommentedOn(new Date());
+			User commentedBy=UserDAO.getUser(email);
+			blogComment.setCommentedBy(commentedBy);
+			
+			
+			blogPostDao.addBlogComment(blogComment);
+			return new ResponseEntity<BlogComment> (blogComment,HttpStatus.OK);
+		}catch(Exception e) {
+			ErrorClass error=new ErrorClass(4,"Unauthrozied access.. Please login");
+			return new ResponseEntity<ErrorClass>(error,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	@RequestMapping(value="/getblogcomments/{blogPostId}",method=RequestMethod.GET)
+	public ResponseEntity<?> getBlogComments(@PathVariable int blogPostId,HttpSession session){
+		
+		String email=(String)session.getAttribute("loginId");
+		if(email==null) {
+			ErrorClass error=new ErrorClass(4,"Unauthrozied access.. Please login");
+			return new ResponseEntity<ErrorClass>(error,HttpStatus.UNAUTHORIZED);
+		
+	}
+		List<BlogComment> blogComments=blogPostDao.getAllBlogComments(blogPostId);
+		return new ResponseEntity<List<BlogComment>>(blogComments,HttpStatus.OK);
+		
+	}
 }

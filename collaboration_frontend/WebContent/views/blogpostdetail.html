@@ -21,3 +21,16 @@
 </div>
 {{blogPost.likes}} likes
 </div>
+
+
+<div>
+<textarea rows="3" cols="9" ng-model="commentTxt"></textarea>
+<button type="button" class="button button-default" ng-click="addComment(commentTxt,blogPost)">Add Comment</button>
+<ul style="list-style:none;">
+<li ng-repeat="blogComment in blogComments | orderBy:'blogComment.commentedOn'">
+<b>{{blogComment.commentTxt}}</b> &nbsp;
+<b>Commented By:</b> {{blogComment.commentedBy.email}} &nbsp;
+<b>Commented On:</b> {{blogComment.commentedOn | date:'medium'}}
+</li>
+</ul>
+</div>
